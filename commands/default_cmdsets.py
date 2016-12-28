@@ -17,6 +17,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 from evennia.contrib import extended_room
 from evennia.contrib import multidescer
+from commands import wixxx
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -57,6 +58,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(extended_room.CmdExtendedDesc())
         self.add(extended_room.CmdGameTime())
         self.add(multidescer.CmdMultiDesc())
+        self.add(wixxx.CmdWixxx())
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
