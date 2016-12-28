@@ -242,7 +242,7 @@ class Room(DefaultRoom):
         else:
             headerr = "{R-.{n"
 
-        header += str.rjust(headerr, 38, '-')
+        header += str.rjust(headerr.encode('ascii','ignore'), 38, '-')
 
         # Header is now built, build the 'string' for sending to the looker.
         string = header + "{n\n\n"
