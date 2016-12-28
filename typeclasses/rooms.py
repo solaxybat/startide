@@ -235,7 +235,7 @@ class Room(DefaultRoom):
         # Left side is easy, since we can just overwrite the string to get the length right.
         headerl = "{R.-< {C" + header_parts[0] + "{R >-"
         headerr = ""
-        header = str.ljust(headerl, 42, '-')
+        header = str.ljust(headerl.encode('ascii','ignore'), 42, '-')
         
         if len(header_parts) >= 2:
             headerr = "-< {C" + header_parts[1] + "{R >-."
