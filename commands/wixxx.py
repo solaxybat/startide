@@ -23,7 +23,7 @@ Usage:
 
 from evennia import CmdSet
 from commands.command import MuxCommand
-from evennia.utils.evtable import EvTable, fill
+from evennia.utils import evtable
 
 class CmdWixxx(MuxCommand):
 
@@ -40,7 +40,37 @@ class CmdWixxx(MuxCommand):
         'ag': 'anything-goes',
         'age': 'ageplay',
         'an': 'anal',
-        'ap': 'avian-preferred'
+        'ap': 'avian-preferred',
+        'aq': 'aquatic',
+        'bi': 'bisexual',
+        'bit': 'biting',
+        'blo': 'blood',
+        'bod': 'body-modification',
+        'cmc': 'cum-covered',
+        'cml': 'cum-loving',
+        'cok': 'cock-worpshipping',
+        'con': 'consensual-only',
+        'crx': 'crossdresser',
+        'cws': 'cunt-worshipping',
+        'd': 'dominant',
+        'dia': 'diapers',
+        'dir': 'dirty-talk',
+        'dis': 'disobediant',
+        'dsc': 'discipline',
+        'dye': 'dyes',
+        'edi': 'edible',
+        'el': 'electrical',
+        'ema': 'emasculation',
+        'en': 'enema',
+        'ex': 'exhibitionist',
+        'exp': 'experienced',
+        'fe': 'female-biased',
+        'fea': 'fear',
+        'ff': 'foot-fetish',
+        'fmz': 'feminization',
+        'fp': 'fur-preferred',
+        'fsh': 'forcedshifting',
+        'fst': 'fisting'
     }
 
     def func(self):
@@ -54,64 +84,119 @@ class CmdWixxx(MuxCommand):
         # Build the output string header
 
         output = "{R.-< {CWhat-Is XXX{R >-"
-        output = output.ljust(38, '-')
+        output = output.ljust(76, '-')
         output += ".{n\r"
 
         # If the switch is /list we can ignore everything else...
 
         if switch == "list":
-            output += "Flags and Meanings:\n"
+            result = "Flags and Meanings:\n"
             for i in self.wiData:
-                output += i + ": " + self.wiData[i] + " "
-            output += "\n"
+                result += i + ":" + self.wiData[i] + ", "
+            result += "\n"
+
             self.caller.msg(output)
+            self.caller.msg(result)
 
             return
 
         # If the switch is /clear then we just remove the flag property
 
         elif switch == "clear":
-            output += "Clearing Set Flags...\n"
+            result = "Clearing Set Flags...\n"
             caller.db.widat = ""
-
             self.caller.msg(output)
+            self.caller.msg(result)
             return
 
         # The /custom switch just grabs the first 12 characters of the arg
         # and turns it into a data field.
 
         elif switch == "custom":
-            output += "Setting a custom string...\n"
+            result = "Setting a custom string...\n"
             string = args[:13]
-            output += '\t"' + string + '"\n'
+            result += '\t"' + string + '"\n'
             caller.db.widatcust = string
             self.caller.msg(output)
+            self.caller.msg(result)
             return
 
         # Set a list of keys by appending them to caller.db.widat
 
         elif switch == "set":
-            output += "Adding flags...\n"
+            result = "Adding flags...\n"
 
             # Quietly sanitize by ignoring anything not a key.
 
             for i in args.split():
                 if i in self.wiData:
-                    output += self.wiData[i] + " "
+                    result += self.wiData[i] + " "
                     caller.db.widat += i + " "
 
-            output += "\nFor a list of: "
+            result += "\nFor a list of: "
             for i in caller.db.widat.split():
-                output += self.wiData[i] + " "
+                result += self.wiData[i] + " "
 
             self.caller.msg(output)
+            self.caller.msg(result)
             return
 
         elif not switch:
 
             # No switch found, this means we want an output.
             # Check if we want a specific output.
-            output += " ".join(switch)
+            if args:
+                # Alright, time to set up a table...
+                result = evtable.EvTable("Name","Result", width=74, align="l", border="none")
+                for i in args.split():
+                    target = caller.search(i, global_search=True)
+                    if target:
+                        # Expand the list of the target.
+                        wi_result = ""
+                        basics = ""
+                        if target.db.widat:
+                            for k in target.db.widat.split():
+                                wi_result += self.wiData[k] + " "
+                        if target.db.widatcust:
+                            wi_result += caller.db.widatcust
+                        if not target.db.widat and not target.db.widatcust:
+                            wi_result = "No WI info set. "
+                        if target.db.sex:
+                            wi_result += " " + target.db.sex
+                        if target.db.race:
+                            wi_result += " " + target.db.race
+                        else:
+                            wi_result += " Unknown"
+                        result.add_row(target.name,wi_result)
+                    else:
+                        result.add_row(i, "Character not found.")
+
+                self.caller.msg(output)
+                self.caller.msg(result)
+                return
+
+            else:
+                # No args. Just give the room.
+                result = evtable.EvTable(table=["Name","result",""], border="none")
+                for i in caller.location.contents():
+                    wi_result = ""
+                    basics = ""
+
+                    if i.db.widat:
+                        for k in i.db.widat.split():
+                            wi_result += self.wiData[k] + " "
+                    else:
+                        wi_result = "No WI info set. "
+                    if i.db.sex:
+                        basics += i.db.sex + " "
+                    if i.db.race:
+                        basics += i.db.race
+                    else:
+                        basics += "Unknown"
+                    result.add_row([i.name.capitilize(),wi_result,basics])
+                self.caller.msg(result)
+                return
+
             self.caller.msg(output)
             return
 
