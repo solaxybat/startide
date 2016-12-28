@@ -233,12 +233,12 @@ class Room(DefaultRoom):
 
         # Build String
         # Left side is easy, since we can just overwrite the string to get the length right.
-        headerl = "{R.-< {C" + str.strip(header_parts[0]) + "{R >-"
+        headerl = "{R.-< {C" + header_parts[0] + "{R >-"
         headerr = ""
         header = str.ljust(headerl, 42, '-')
         
         if len(header_parts) >= 2:
-            headerr = "-< {C" + str.strip(header_parts[1]) + "{R >-."
+            headerr = "-< {C" + header_parts[1] + "{R >-."
         else:
             headerr = "{R-.{n"
 
