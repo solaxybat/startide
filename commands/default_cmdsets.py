@@ -18,6 +18,7 @@ from evennia import default_cmds
 from evennia.contrib import extended_room
 from evennia.contrib import multidescer
 from commands import wixxx
+from commands import editplayer
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -59,6 +60,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(extended_room.CmdGameTime())
         self.add(multidescer.CmdMultiDesc())
         self.add(wixxx.CmdWixxx())
+        self.add(editplayer.CmdEditPlayer())
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
