@@ -24,6 +24,8 @@ Usage:
 from evennia import CmdSet
 from commands.command import MuxCommand
 from evennia.utils import evtable
+from commands import assist
+from assist import header, footer, csex
 
 class CmdWixxx(MuxCommand):
     """
@@ -106,7 +108,7 @@ class CmdWixxx(MuxCommand):
         'hyp': 'hypnosis',
         'i': 'inexperienced',
         'if': 'inflation',
-        'inc': 'incesst',
+        'inc': 'incest',
         'inf': 'infantilist',
         'int': 'intelligence-biased',
         'jo': 'masterbating',
@@ -192,21 +194,16 @@ class CmdWixxx(MuxCommand):
         args = self.args.strip()
         switch = next(iter(self.switches or []), None)
 
-        # Build the output string header
-
-        output = "{R.-< {CWhat-Is XXX{R >-"
-        output = output.ljust(76, '-')
-        output += ".{n\r"
-
         # If the switch is /list we can ignore everything else...
 
         if switch == "list":
             result = evtable.EvTable("","Flag:Meaning","", width=74, align="l", valign="t", border="none")
-            for i, r, q in zip(*[iter(self.wiData)]*3):
+            for i, r, q in zip(*[iter(sorted(self.wiData))]*3):
                 result.add_row("{C" + i + "{n: " + self.wiData[i], "{C" + r + "{n: " + self.wiData[r], "{C" + q + "{n: " + self.wiData[q])
 
-            self.caller.msg(output)
+            self.caller.msg(header("What-IS"))
             self.caller.msg(result)
+            self.caller.msg(footer())
 
             return
 
@@ -215,8 +212,9 @@ class CmdWixxx(MuxCommand):
         elif switch == "clear":
             result = "Clearing Set Flags...\n"
             caller.db.widat = ""
-            self.caller.msg(output)
+            self.caller.msg(header("What-IS"))
             self.caller.msg(result)
+            self.caller.msg(footer())
             return
 
         # The /custom switch just grabs the first 12 characters of the arg
@@ -227,8 +225,9 @@ class CmdWixxx(MuxCommand):
             string = args[:13]
             result += '\t"' + string + '"\n'
             caller.db.widatcust = string
-            self.caller.msg(output)
+            self.caller.msg(header("What-IS"))
             self.caller.msg(result)
+            self.caller.msg(footer())
             return
 
         # Set a list of keys by appending them to caller.db.widat
@@ -252,8 +251,9 @@ class CmdWixxx(MuxCommand):
             for i in caller.db.widat.split():
                 result += self.wiData[i] + " "
 
-            self.caller.msg(output)
+            self.caller.msg(header("What-IS"))
             self.caller.msg(result)
+            self.caller.msg(footer())
             return
 
         elif not switch:
@@ -276,19 +276,20 @@ class CmdWixxx(MuxCommand):
                         if target.db.widatcust:
                             wi_result += caller.db.widatcust
                         if not target.db.widat and not target.db.widatcust:
-                            wi_result = "No WI info set, "
+                            wi_result = "No WI info set"
                         if target.db.sex:
-                            wi_result += " " + target.db.sex
+                            wi_result += csex(target.db.sex)
                         if target.db.race:
                             wi_result += " " + target.db.race
                         else:
-                            wi_result += "Unknown"
+                            wi_result += " Unknown"
                         result.add_row(target.name,wi_result)
                     else:
                         result.add_row(i, "Character not found.")
 
-                self.caller.msg(output)
+                self.caller.msg(header("What-IS"))
                 self.caller.msg(result)
+                self.caller.msg(footer())
                 return
 
             else:
@@ -305,18 +306,19 @@ class CmdWixxx(MuxCommand):
                             for k in i.db.widat.split():
                                 wi_result += self.wiData[k] + " "
                         else:
-                            wi_result = "No WI info set. "
+                            wi_result = "No WI info set"
                         if i.db.sex:
-                            wi_result += i.db.sex + " "
+                            wi_result += csex(i.db.sex)
                         if i.db.race:
-                            wi_result += i.db.race
+                            wi_result += " " + i.db.race
                         else:
-                            wi_result += "Unknown"
+                            wi_result += " Unknown"
                         result.add_row(i.name,wi_result,basics)
                         result.add_row()
 
-                self.caller.msg(output)
+                self.caller.msg(header("What-IS"))
                 self.caller.msg(result)
+                self.caller.msg(footer())
                 return
 
             self.caller.msg(output)
