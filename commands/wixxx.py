@@ -26,6 +26,28 @@ from commands.command import MuxCommand
 from evennia.utils import evtable
 
 class CmdWixxx(MuxCommand):
+    """
+    What-Is XXX is a MUCK-based command allowing specific characters to set a list of 'interests'
+    or likes that allow others to find them. As noted by the XXX, this particular version is
+    designed primarily for adult interests. As What-Is is a fairly self contained and modular
+    bit of code, it is being used as practice in coding. Evennia port by Indigo@Startide
+
+    Usage:
+        +wi (or +wixxx):     display an output of all nearby (in the room) players with What-Is
+                             information.
+
+        +wi [name]:          display information of character object [name], works at range.
+
+        +wi/set [string]:    Append a list of dictionary keys from [string] to the character's
+                             what-is data.
+
+        +wi/clear:           Remove current list of keys.
+
+        +wi/custom [string]: Allows up to 12 characters for a custom field, at the end of the
+                             final listing.
+
+        +wi/list:            Display a full list of currently registered keys.
+"""
 
     key = "+wi"
     aliases = ["+wixxx", "wi", "wixxx"]
@@ -48,7 +70,7 @@ class CmdWixxx(MuxCommand):
         'bod': 'body-modification',
         'cmc': 'cum-covered',
         'cml': 'cum-loving',
-        'cok': 'cock-worpshipping',
+        'cok': 'cock-worshipping',
         'con': 'consensual-only',
         'crx': 'crossdresser',
         'cws': 'cunt-worshipping',
@@ -70,7 +92,96 @@ class CmdWixxx(MuxCommand):
         'fmz': 'feminization',
         'fp': 'fur-preferred',
         'fsh': 'forcedshifting',
-        'fst': 'fisting'
+        'fst': 'fisting',
+        'fud': 'food-fetish',
+        'fuk': 'fuckable',
+        'gay': 'homosexual',
+        'gen': 'gendershifting',
+        'gro': 'group-sex',
+        'het': 'heterosexual',
+        'hmb': 'herm-biased',
+        'hor': 'horny',
+        'hu': 'humiliation',
+        'hum': 'humor-and-comedy',
+        'hyp': 'hypnosis',
+        'i': 'inexperienced',
+        'if': 'inflation',
+        'inc': 'incesst',
+        'inf': 'infantilist',
+        'int': 'intelligence-biased',
+        'jo': 'masterbating',
+        'l': 'lecherous',
+        'la': 'large',
+        'lac': 'lactating',
+        'lat': 'latex',
+        'le': 'leather',
+        'lea': 'leashable',
+        'loo': 'loose',
+        'ma': 'male-biased',
+        'mas': 'masochist',
+        'mat': 'mated',
+        'mnd': 'mind-control',
+        'mag': 'magic-sex',
+        'mon': 'monogomous',
+        'mum': 'mummification',
+        'non': 'non-consensual',
+        'ns': 'non-sexual',
+        'nt': 'nipple-torture',
+        'null': 'nullification',
+        'obj': 'objectification',
+        'od': 'orgasm-denial',
+        'ora': 'oral',
+        'ow': 'owned',
+        'pet': 'pet',
+        'pie': 'piercing',
+        'plt': 'plants',
+        'plu': 'plushophile',
+        'ply': 'polyamorous',
+        'pp': 'public-property',
+        'prg': 'pregnophile',
+        'pri': 'private',
+        'pty': 'panty-fetish',
+        'pub': 'public',
+        'rim': 'rimming',
+        'rom': 'romantic',
+        'sad': 'sadist',
+        'sc': 'scat',
+        'sha': 'shaving',
+        'shd': 'sheaths',
+        'shy': 'shy',
+        'siz': 'size-queen',
+        'slu': 'slutty',
+        'slv': 'slave',
+        'sm': 'small',
+        'smc': 'sex-machines',
+        'snu': 'snuff',
+        'sp': 'scale-preferred',
+        'spk': 'spanking',
+        'str': 'strap-ons',
+        'su': 'submissive',
+        'sw': 'switch',
+        'sxd': 'sex-doll',
+        'tan': 'tantric',
+        'tat': 'tattoo(ing)',
+        'tea': 'teasing',
+        'ten': 'tentacles',
+        'tik': 'tickling',
+        'tit': 'breast-loving',
+        'top': 'top',
+        'toy': 'toys',
+        'tra': 'trainable',
+        'tz': 'transformation',
+        'un': 'unavailable',
+        'unb': 'unbirthing',
+        'up': 'uppity',
+        'van': 'vanilla',
+        'vi': 'virgin',
+        'vor': 'voraphile',
+        'voy': 'voyuer',
+        'wa': 'watersports',
+        'wet': 'wet-and-messy',
+        'yif': 'yiffy'
+
     }
 
     def func(self):
@@ -90,10 +201,9 @@ class CmdWixxx(MuxCommand):
         # If the switch is /list we can ignore everything else...
 
         if switch == "list":
-            result = "Flags and Meanings:\n"
-            for i in self.wiData:
-                result += i + ":" + self.wiData[i] + ", "
-            result += "\n"
+            result = evtable.EvTable("","Flag:Meaning","", width=74, align="l", valign="t", border="none")
+            for i, r, q in zip(*[iter(self.wiData)]*3):
+                result.add_row("{C" + i + "{n: " + self.wiData[i], "{C" + r + "{n: " + self.wiData[r], "{C" + q + "{n: " + self.wiData[q])
 
             self.caller.msg(output)
             self.caller.msg(result)
@@ -124,6 +234,11 @@ class CmdWixxx(MuxCommand):
         # Set a list of keys by appending them to caller.db.widat
 
         elif switch == "set":
+            # Sanity Check, have they been initialized?
+            if not self.caller.db.widat:
+                self.caller.db.widat = ""
+            if not self.caller.db.widatcust:
+                self.caller.db.widatcust = ""
             result = "Adding flags...\n"
 
             # Quietly sanitize by ignoring anything not a key.
@@ -147,9 +262,10 @@ class CmdWixxx(MuxCommand):
             # Check if we want a specific output.
             if args:
                 # Alright, time to set up a table...
-                result = evtable.EvTable("Name","Result", width=74, align="l", border="none")
+                result = evtable.EvTable("Name","Result", width=74, align="l", valign="t", border="none")
+                result.reformat_column(0, width=16)
                 for i in args.split():
-                    target = caller.search(i, global_search=True)
+                    target = caller.search(i, typeclass="typeclasses.characters.Character", global_search=True)
                     if target:
                         # Expand the list of the target.
                         wi_result = ""
@@ -160,13 +276,13 @@ class CmdWixxx(MuxCommand):
                         if target.db.widatcust:
                             wi_result += caller.db.widatcust
                         if not target.db.widat and not target.db.widatcust:
-                            wi_result = "No WI info set. "
+                            wi_result = "No WI info set, "
                         if target.db.sex:
                             wi_result += " " + target.db.sex
                         if target.db.race:
                             wi_result += " " + target.db.race
                         else:
-                            wi_result += " Unknown"
+                            wi_result += "Unknown"
                         result.add_row(target.name,wi_result)
                     else:
                         result.add_row(i, "Character not found.")
@@ -177,23 +293,29 @@ class CmdWixxx(MuxCommand):
 
             else:
                 # No args. Just give the room.
-                result = evtable.EvTable(table=["Name","result",""], border="none")
-                for i in caller.location.contents():
+                result = evtable.EvTable("Name","result", width=74, align="l", valign="t", border="none")
+                result.reformat_column(0, width=16)
+                for i in caller.location.contents:
                     wi_result = ""
                     basics = ""
 
-                    if i.db.widat:
-                        for k in i.db.widat.split():
-                            wi_result += self.wiData[k] + " "
-                    else:
-                        wi_result = "No WI info set. "
-                    if i.db.sex:
-                        basics += i.db.sex + " "
-                    if i.db.race:
-                        basics += i.db.race
-                    else:
-                        basics += "Unknown"
-                    result.add_row([i.name.capitilize(),wi_result,basics])
+                    if i.has_player:
+
+                        if i.db.widat:
+                            for k in i.db.widat.split():
+                                wi_result += self.wiData[k] + " "
+                        else:
+                            wi_result = "No WI info set. "
+                        if i.db.sex:
+                            wi_result += i.db.sex + " "
+                        if i.db.race:
+                            wi_result += i.db.race
+                        else:
+                            wi_result += "Unknown"
+                        result.add_row(i.name,wi_result,basics)
+                        result.add_row()
+
+                self.caller.msg(output)
                 self.caller.msg(result)
                 return
 
