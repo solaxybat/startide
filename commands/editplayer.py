@@ -9,6 +9,9 @@ to standard players.
 from evennia import default_cmds
 from commands.command import Command
 from evennia.utils.evmenu import EvMenu
+from evennia.utils.evtable import wrap
+from commands import assist
+from assist import header, footer, csex
 
 class CmdEditPlayer(Command):
     """
@@ -46,18 +49,13 @@ class CmdEditPlayer(Command):
             self.caller.db.fullname = "None"
 
         EvMenu(self.caller, "commands.editplayer",
-               startnode="menu_start_node")
+               startnode="menu_start_node",
+               node_formatter=node_formatter)
 
 def menu_start_node(caller):
 
-    header = "{R.-< {CEditplayer{R >-"
-    header = header.ljust(76, '-')
-    header += ".{n\r"
-
     options = ()
-
-    text = header + "\n"
-    text += "{CName:{n " + caller.name + "\n"
+    text = "{CName:{n " + caller.name + "\n"
     if caller.db.flight:
         text += "{CCan Fly:{n {GYes{n\n"
     else:
@@ -67,7 +65,7 @@ def menu_start_node(caller):
     line = "{CFull Name:{n " + caller.db.fullname
     options = options + ({"desc": line,
                           "goto": "askFullname"},)
-    line = "{CSex:{n " + caller.db.sex
+    line = "{CSex:{n " + csex(caller.db.sex)
     options = options + ({"desc": line,
                           "goto": "askSex"},)
     line = "{CRace:{n " + caller.db.race
@@ -184,3 +182,8 @@ def setDesc(caller, raw_string):
     else:
         caller.db.desc = desc
         caller.msg("{CDesc Set to:{n %s" % desc)
+
+def node_formatter(nodetext, optionstext, caller=None):
+    separator1 = header("Edit Player")
+    separator2 = ""
+    return separator1 + "\n" + nodetext + "\n" + optionstext + "\n" + footer()
