@@ -79,3 +79,50 @@ def csex(input, short=False):
             return "|wNeuter|n"
     else:
         return input
+
+
+# timestring takes a float input and returns a pretty string in the format
+# of xy xxw xxd xxh xxm xxs (without spaces). Short indicates only the
+# biggest two values are returned.
+def timestring(input, short=False):
+
+    # Lets drop the input to an integer.
+    input = round(input)
+
+    # Timescales (all the time stuff is in seconds by default):
+    # 1 minute = 60 seconds
+    # 1 hour = 3600 seconds
+    # 1 day = 86,400 seconds
+    # 1 week = 604800 seconds
+    # 1 year = 31449600 seconds
+
+    time_list = []
+    output = ""
+
+    if input // 31449600 > 0:
+        time_list.append("|r" + str(int(input // 31449600)) + "y|n")
+        input = input % 31449600
+    if input // 604800 > 0:
+        time_list.append("|r" + str(int(input // 604800)) + "w|n")
+        input = input % 604800
+    if input // 86400 > 0:
+        time_list.append("|y" + str(int(input // 86400)) + "d|n")
+        input = input % 86400
+    if input // 3600 > 0:
+        time_list.append("|y" + str(int(input // 3600)) + "h|n")
+        input = input % 3600
+    if input // 60 > 0:
+        time_list.append("|g" + str(int(input // 60)) + "m|n")
+        input = input % 60
+    if input // 1 > 0:
+        time_list.append("|g" + str(int(input)) + "s|n")
+
+    # Construct our output string:
+
+    if short:
+        output = "".join(time_list[:2])
+    else:
+        output = "".join(time_list)
+
+    return output
+
