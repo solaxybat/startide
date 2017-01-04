@@ -19,6 +19,8 @@ from evennia.contrib import extended_room
 from evennia.contrib import multidescer
 from commands import wixxx
 from commands import editplayer
+from commands import icooc
+from commands import who
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -61,6 +63,9 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(multidescer.CmdMultiDesc())
         self.add(wixxx.CmdWixxx())
         self.add(editplayer.CmdEditPlayer())
+        self.add(icooc.goIC())
+        self.add(icooc.goOOC())
+        self.add(who.cmdPlusWho())
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
