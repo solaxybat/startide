@@ -21,6 +21,7 @@ from commands import wixxx
 from commands import editplayer
 from commands import icooc
 from commands import who
+from commands import atmail
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -66,6 +67,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(icooc.goIC())
         self.add(icooc.goOOC())
         self.add(who.cmdPlusWho())
+        self.add(atmail.CmdMail())
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
