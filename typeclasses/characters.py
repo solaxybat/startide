@@ -112,7 +112,7 @@ class Character(DefaultCharacter):
         session = sessions[0] if sessions else None
 
         # Update last HOST for tracking purposes.
-        self.db.lastIP = session.address
+        self.db.lastIP = ""
         self.db.lastDisconnect = time.time()
         # Actual time - time connected.
         self.db.time_played += time.time() - session.conn_time
