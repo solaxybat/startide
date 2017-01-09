@@ -95,13 +95,13 @@ class Character(DefaultCharacter):
 
     def at_pre_unpuppet(self):
         # Update Time Played.
-        sessions = self.sessions.get()
-        session = sessions[0] if sessions else None
+        # sessions = self.sessions.get()
+        # session = sessions[0] if sessions else None
 
         # Update last HOST for tracking purposes.
-        self.db.lastIP = session.address
+        # self.db.lastIP = session.address
         self.db.lastDisconnect = time.time()
         # Actual time - time connected.
-        self.db.time_played += time.time() - session.conn_time
+        # self.db.time_played += time.time() - session.conn_time
 
 
