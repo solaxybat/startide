@@ -13,6 +13,8 @@ from evennia import DefaultRoom
 from evennia import gametime
 from evennia import default_cmds
 from evennia import utils
+from evennia.utils import evtable
+from commands.assist import header, footer, csex
 
 # error return function, needed by Extended Look command
 _AT_SEARCH_RESULT = utils.variable_from_module(*settings.SEARCH_AT_RESULT.rsplit('.', 1))
@@ -217,43 +219,48 @@ class Room(DefaultRoom):
         for con in visible:
             key = con.get_display_name(looker)
             if con.destination:
-                exits.append(key)
+                alias = ""
+                if hasattr(con, "aliases"):
+                    alias = "|b<|g{}|b>|n".format(str.upper(con.aliases.all()[0]))
+                exits.append("{} {}".format(alias, key))
             elif con.has_player:
                 # Colorize the Players based on idle.
-                if con.idle_time > 600:
+                if not con.has_player:
+                    continue
+                elif con.idle_time > 600:
                     users.append("{B%s-I{n" % key)
                 else:
                     users.append(key)
             else:
                things.append(key)
-        
-        # Parse room name to come up with the two names (if applicable)
-        name = self.get_display_name(looker)
-        header_parts = name.split('-', 1 )
 
-        # Build String
-        # Left side is easy, since we can just overwrite the string to get the length right.
-        headerl = "{R.-< {C" + header_parts[0] + "{R >-"
-        headerr = ""
-        header = str.ljust(headerl.encode('ascii','ignore'), 42, '-')
-        
-        if len(header_parts) >= 2:
-            headerr = "-< {C" + header_parts[1] + "{R >-."
-        else:
-            headerr = "{R-.{n"
-
-        header += str.rjust(headerr.encode('ascii','ignore'), 38, '-')
-
-        # Header is now built, build the 'string' for sending to the looker.
-        string = header + "{n\n\n"
+        # Begin Output
+        string = header(self.get_display_name(looker))
         if self.db.desc:
-            string += "%s" % self.db.desc
-        if exits:
-            string += "\n{wExits:{n " + ",".join(exits)
-        if users or things:
-            string += "\n{wYou see:{n " + ", ".join(users + things)
-        
-        return string
+            string += "\n\n{}".format(self.db.desc)
+
+        string += "\n\n"
+        table = evtable.EvTable("|cPlayers:|n", "|cThings:|n", "|cExits:", width=78, border="none")
+        table.reformat_column(0, width=26, align="l")
+        table.reformat_column(1, width=26, align="l")
+        table.reformat_column(2, width=26, align="l")
+        for index in range(max(len(users), len(things), len(exits))):
+            row = []
+            if index < len(users):
+                row.append(users[index])
+            else:
+                row.append(" ")
+            if index < len(things):
+                row.append(things[index])
+            else:
+                row.append(" ")
+            if index < len(exits):
+                row.append(exits[index])
+            else:
+                row.append(" ")
+            table.add_row(row[0], row[1], row[2])
+
+        return "{}{}".format(string, table)
 
 # Custom Look command supporting Room details. Add this to
 # the Default cmdset to use.
