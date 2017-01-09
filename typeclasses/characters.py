@@ -92,38 +92,16 @@ class Character(DefaultCharacter):
             obj.msg("%s has entered the game." % self.get_display_name(obj), from_obj=from_obj)
         self.location.for_contents(message, exclude=[self], from_obj=self)
 
-    def at_post_unpuppet(self, player, session=None):
-        """
-        We stove away the character when the player goes ooc/logs off,
-        otherwise the character object will remain in the room also
-        after the player logged off ("headless", so to say).
-        Args:
-           player (Player): The player object that just disconnected
-                            from this object.
-           session (Session): Session controlling the connection that
-                              just disconnected.
 
-        Overriding default to allow for tracking disconnection time.
-        Also changing behavior to -not- store the character object.
-        Hiding characters will be done at the room level based on active session.
-        """
+    def at_pre_unpuppet(self):
         # Update Time Played.
         sessions = self.sessions.get()
         session = sessions[0] if sessions else None
 
         # Update last HOST for tracking purposes.
-        self.db.lastIP = ""
+        self.db.lastIP = session.address
         self.db.lastDisconnect = time.time()
         # Actual time - time connected.
         self.db.time_played += time.time() - session.conn_time
 
-        if not self.sessions.count():
-            # only remove this char from grid if no sessions control it anymore.
-            if self.location:
-                def message(obj, from_obj):
-                    obj.msg("%s has left the game." % self.get_display_name(obj), from_obj=from_obj)
-                self.location.for_contents(message, exclude=[self], from_obj=self)
-                self.db.prelogout_location = self.location
-                # Override the 'storage' mechanism.
-                # self.location = None
 
