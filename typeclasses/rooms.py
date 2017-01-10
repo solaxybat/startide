@@ -221,7 +221,9 @@ class Room(DefaultRoom):
             if con.destination:
                 alias = ""
                 if hasattr(con, "aliases"):
-                    alias = "|b<|g{}|b>|n".format(str.upper(con.aliases.all()[0]))
+                    alias_list = con.aliases.all()
+                    alias_list.sort(key=len)
+                    alias = "|b<|g{}|b>|n".format(str.upper(alias_list[0]))
                 exits.append("{} {}".format(alias, key))
             elif con.has_player:
                 # Colorize the Players based on idle.
@@ -241,9 +243,9 @@ class Room(DefaultRoom):
 
         string += "\n\n"
         table = evtable.EvTable("|cPlayers:|n", "|cThings:|n", "|cExits:", width=78, border="none")
-        table.reformat_column(0, width=26, align="l")
-        table.reformat_column(1, width=26, align="l")
-        table.reformat_column(2, width=26, align="l")
+        table.reformat_column(0, width=18, align="l")
+        table.reformat_column(1, width=22, align="l")
+        table.reformat_column(2, width=38, align="l")
         for index in range(max(len(users), len(things), len(exits))):
             row = []
             if index < len(users):
