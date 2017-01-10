@@ -47,8 +47,10 @@ class CmdSmell(Command):
         else:
             if target.db.scent and target.db.scent != "None":
                 caller.msg("You smell: {}".format(target.db.scent))
+                target.msg("{} smelled you!".format(caller.name))
                 return
             else:
                 caller.msg("{} doesn't smell like anything.".format(target.name))
+                target.msg("{} smelled you!".format(caller.name))
 
         return
