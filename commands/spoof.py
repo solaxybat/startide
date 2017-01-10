@@ -18,13 +18,17 @@ class CmdSpoof(Command):
 
     def func(self):
 
-        caller = self.caller.name
+        caller = self.caller
         args = self.args.strip()
         location = self.caller.location
 
+        if not args:
+            caller.msg("Specify a message to spoof: 'spoof [message]'")
+            return
+
         string = "|c"
         string += args
-        string += " .. |b[|g{}|b]|n".format(caller)
+        string += " .. |b[|g{}|b]|n".format(caller.name)
 
         location.msg_contents(string)
 
