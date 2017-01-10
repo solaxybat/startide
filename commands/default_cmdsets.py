@@ -23,6 +23,7 @@ from commands import icooc
 from commands import who
 from commands import atmail
 from commands import spoof
+from commands import ooc
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -70,6 +71,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(who.cmdPlusWho())
         self.add(atmail.CmdMail())
         self.add(spoof.CmdSpoof())
+        self.add(ooc.CmdOOC())
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
