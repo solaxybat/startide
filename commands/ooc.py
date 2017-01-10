@@ -20,10 +20,13 @@ class CmdOOC(Command):
         args = str(self.args.strip())
         location = self.caller.location
 
-        string = "|Y<OOC>|n {} ".format(caller.name)
+        string = "|Y<OOC>|n {}".format(caller.name)
         if args[0] == ":":
-            string += "{}".format(args[1:])
+            if args[1] == "'":
+                string += "{}".format(args[1:])
+            else:
+                string += " {}".format(args[1:])
         else:
-            string += 'says, "{}"'.format(args)
+            string += ' says, "{}"'.format(args)
 
         location.msg_contents(string)
