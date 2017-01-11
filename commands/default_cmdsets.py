@@ -25,6 +25,7 @@ from commands import atmail
 from commands import spoof
 from commands import ooc
 from commands import smell
+from commands import morph
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -74,6 +75,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(spoof.CmdSpoof())
         self.add(ooc.CmdOOC())
         self.add(smell.CmdSmell())
+        self.add(morph.CmdMorph())
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
     """
