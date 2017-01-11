@@ -72,7 +72,7 @@ def csex(input, short=False):
             return "|BI|n"
         else:
             return "|BIntersex|n"
-    elif input == "Neuter" or input is None:
+    elif input == "Neuter" or input == "None":
         if short:
             return "|wN|n"
         else:
