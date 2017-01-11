@@ -72,7 +72,7 @@ def csex(input, short=False):
             return "|BI|n"
         else:
             return "|BIntersex|n"
-    elif input == "Neuter":
+    elif input == "Neuter" or input is None:
         if short:
             return "|wN|n"
         else:
@@ -126,3 +126,16 @@ def timestring(input, short=False):
 
     return output
 
+# sysemit - a wrapper for 'system' messages, set room to TRUE to broadcast
+# to room instead of just caller. TODO: Search for caller if not Character Obj
+def sysemit(caller, input, room=False):
+    args = input.strip()
+
+    if not args:
+        return
+
+    if room:
+        location = caller.location
+        location.msg_contents("|R<|ySystem|R>:|n {}".format(args), exclude=caller)
+    else:
+        caller.msg("|Y<System>:|n {}".format(args))
