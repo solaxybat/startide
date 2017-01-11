@@ -122,8 +122,8 @@ def descMorph(caller, prompt, result):
         attr_list[attr] = getattr(caller.db, attr)
     attr_list["mdesc"] = args
     caller.db.morph[caller.ndb.mname] = attr_list
+    sysemit(caller, "The morph '{}' stored. Use with 'morph {}'.".format(args, caller.ndb.mname))
     del caller.ndb.mname
-    sysemit(caller, "The morph '{}' stored. Use with 'morph {}'.".format(args, args))
     return
 
 
