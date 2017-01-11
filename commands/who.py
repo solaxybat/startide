@@ -30,6 +30,7 @@ class cmdPlusWho(Command):
     """
 
     key = "+who"
+    aliases = ["fa", "+fa"]
     lock = "cmd:all()"
     help_category = "General"
 
