@@ -82,6 +82,7 @@ class CmdMorph(MuxCommand):
                 attr_dict = caller.db.morph[args]
                 for attr in attr_dict.keys():
                     setattr(caller.db, attr, attr_dict[attr])
+                del caller.db.mdesc
                 sysemit(caller, "Morphed to {}.".format(args))
                 return
             else:
