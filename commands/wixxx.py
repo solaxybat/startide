@@ -199,7 +199,7 @@ class CmdWixxx(MuxCommand):
         if switch == "list":
             result = evtable.EvTable("","Flag:Meaning","", width=74, align="l", valign="t", border="none")
             for i, r, q in zip(*[iter(sorted(self.wiData))]*3):
-                result.add_row("{C" + i + "{n: " + self.wiData[i], "{C" + r + "{n: " + self.wiData[r], "{C" + q + "{n: " + self.wiData[q])
+                result.add_row("|C" + i + "|n: " + self.wiData[i], "|C" + r + "|n: " + self.wiData[r], "|C" + q + "|n: " + self.wiData[q])
 
             self.caller.msg(header("What-IS"))
             self.caller.msg(result)
