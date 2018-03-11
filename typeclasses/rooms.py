@@ -230,7 +230,7 @@ class Room(DefaultRoom):
                 if not con.has_account:
                     continue
                 elif con.idle_time > 600:
-                    users.append("{B%s-I{n" % key)
+                    users.append("|B%s-I|n" % key)
                 else:
                     users.append(key)
             else:
@@ -399,7 +399,7 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
             if not self.rhs:
                 # no '=' used - list content of given detail
                 if self.args in location.db.details:
-                    string = "{wDetail '%s' on %s:\n{n" % (self.args, location)
+                    string = "|wDetail '%s' on %s:\n|n" % (self.args, location)
                     string += str(location.db.details[self.args])
                     caller.msg(string)
                 else:
@@ -414,12 +414,12 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
             # we are doing a @desc call
             if not self.args:
                 if location:
-                    string = "{wDescriptions on %s{n:\n" % location.key
-                    string += " {wspring:{n %s\n" % location.db.spring_desc
-                    string += " {wsummer:{n %s\n" % location.db.summer_desc
-                    string += " {wautumn:{n %s\n" % location.db.autumn_desc
-                    string += " {wwinter:{n %s\n" % location.db.winter_desc
-                    string += " {wgeneral:{n %s" % location.db.general_desc
+                    string = "|wDescriptions on %s|n:\n" % location.key
+                    string += " |wspring:|n %s\n" % location.db.spring_desc
+                    string += " |wsummer:|n %s\n" % location.db.summer_desc
+                    string += " |wautumn:|n %s\n" % location.db.autumn_desc
+                    string += " |wwinter:|n %s\n" % location.db.winter_desc
+                    string += " |wgeneral:|n %s" % location.db.general_desc
                     caller.msg(string)
                     return
             if self.switches and self.switches[0] in ("spring",
