@@ -18,7 +18,7 @@ from evennia import default_cmds
 from evennia.contrib import extended_room
 from evennia.contrib import multidescer
 from commands import wixxx
-from commands import editplayer
+from commands import editaccount
 from commands import icooc
 from commands import who
 from commands import atmail
@@ -31,7 +31,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
     The `CharacterCmdSet` contains general in-game commands like `look`,
     `get`, etc available on in-game Character objects. It is merged with
-    the `PlayerCmdSet` when a Player puppets a Character.
+    the `AccountCmdSet` when an Account puppets a Character.
     """
     key = "DefaultCharacter"
 
@@ -45,20 +45,20 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
 
 
-class PlayerCmdSet(default_cmds.PlayerCmdSet):
+class AccountCmdSet(default_cmds.AccountCmdSet):
     """
-    This is the cmdset available to the Player at all times. It is
-    combined with the `CharacterCmdSet` when the Player puppets a
+    This is the cmdset available to the Account at all times. It is
+    combined with the `CharacterCmdSet` when the Account puppets a
     Character. It holds game-account-specific commands, channel
     commands, etc.
     """
-    key = "DefaultPlayer"
+    key = "DefaultAccount"
 
     def at_cmdset_creation(self):
         """
         Populates the cmdset
         """
-        super(PlayerCmdSet, self).at_cmdset_creation()
+        super(AccountCmdSet, self).at_cmdset_creation()
         #
         # any commands you add below will overload the default ones.
         #
@@ -67,7 +67,7 @@ class PlayerCmdSet(default_cmds.PlayerCmdSet):
         self.add(extended_room.CmdGameTime())
         self.add(multidescer.CmdMultiDesc())
         self.add(wixxx.CmdWixxx())
-        self.add(editplayer.CmdEditPlayer())
+        self.add(editaccount.CmdEditAccount())
         self.add(icooc.goIC())
         self.add(icooc.goOOC())
         self.add(who.cmdPlusWho())

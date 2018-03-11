@@ -6,7 +6,7 @@ Evennia Contribution - grungies1138 2016
 A simple Brandymail style @mail system that uses the Msg class from Evennia Core.
 
 Installation:
-    import MailCommand from this module into the default Player or Character command set
+    import MailCommand from this module into the default Account or Character command set
 """
 
 from evennia import default_cmds, search_object
@@ -24,17 +24,17 @@ class CmdMail(default_cmds.MuxCommand):
     Commands that allow either IC or OOC communications
 
     Usage:
-        @mail       - Displays all the mail a player has in their mailbox
+        @mail       - Displays all the mail an account has in their mailbox
 
         @mail <#>   - Displays a specific message
 
-        @mail <players>=<subject>/<message>
-                - Sends a message to the comma separated list of players.
+        @mail <accounts>=<subject>/<message>
+                - Sends a message to the comma separated list of accounts.
 
         @mail/delete <#> - Deletes a specific message
 
-        @mail/forward <player list>=<#>[/<Message>]
-                - Forwards an existing message to the specified list of players,
+        @mail/forward <account list>=<#>[/<Message>]
+                - Forwards an existing message to the specified list of accounts,
                   original message is delivered with optional Message prepended.
 
         @mail/reply <#>=<message>
@@ -78,7 +78,7 @@ class CmdMail(default_cmds.MuxCommand):
             elif "forward" in self.switches:
                 try:
                     if not self.rhs:
-                        self.caller.msg("Cannot forward a message without a player list.  Please try again.")
+                        self.caller.msg("Cannot forward a message without an account list.  Please try again.")
                         return
                     elif not self.lhs:
                         self.caller.msg("You must define a message to forward.")
@@ -108,7 +108,7 @@ class CmdMail(default_cmds.MuxCommand):
                                 self.caller.msg("Message does not exist.")
                                 return
                 except ValueError:
-                    self.caller.msg("Usage: @mail/forward <player list>=<#>[/<Message>]")
+                    self.caller.msg("Usage: @mail/forward <account list>=<#>[/<Message>]")
             elif "reply" in self.switches:
                 try:
                     if not self.rhs:
@@ -189,7 +189,7 @@ class CmdMail(default_cmds.MuxCommand):
         # mail_messages = Msg.objects.get_by_tag(category="mail")
         # messages = []
         messages = Msg.objects.get_by_tag(category="mail", raw_queryset=True). \
-            filter(db_receivers_players=self.caller.player)
+            filter(db_receivers_accounts=self.caller.account)
         return messages
 
     def send_mail(self, recipients, subject, message, caller):
@@ -197,16 +197,16 @@ class CmdMail(default_cmds.MuxCommand):
         Function for sending new mail.  Also useful for sending notifications from objects or systems.
 
         Args:
-            recipients (list): list of Player or character objects to receive the newly created mails.
+            recipients (list): list of Account or character objects to receive the newly created mails.
             subject (str): The header or subject of the message to be delivered.
             message (str): The body of the message being sent.
-            caller (obj): The object (or Player or Character) that is sending the message.
+            caller (obj): The object (or Account or Character) that is sending the message.
         """
         recobjs = []
         for char in recipients:
 
-            if self.caller.player.search(char) is not None:
-                recobjs.append(self.caller.player.search(char))
+            if self.caller.account.search(char) is not None:
+                recobjs.append(self.caller.account.search(char))
         if recobjs:
             lock_string = ""
             for recipient in recobjs:
@@ -218,6 +218,6 @@ class CmdMail(default_cmds.MuxCommand):
             caller.msg("You sent a your message.")
             return
         else:
-            caller.msg("No valid players found.  Cannot send message.")
+            caller.msg("No valid accounts found.  Cannot send message.")
             return
 

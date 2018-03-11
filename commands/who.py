@@ -21,7 +21,7 @@ from evennia.utils import evtable, datetime_format
 
 class cmdPlusWho(Command):
     """
-    Calls forth a list of currently connected players and reports their
+    Calls forth a list of currently connected accounts and reports their
     name, location, and some basic character information to assist in
     locating roleplaying opportunities.
 
@@ -39,7 +39,7 @@ class cmdPlusWho(Command):
         # Build a list of touples using the same logic as the cmdWHO
         # from evennia itself.
 
-        player = self.player
+        account = self.account
         session_list = SESSIONS.get_sessions()
 
         who_list = []
@@ -48,12 +48,12 @@ class cmdPlusWho(Command):
             if not session.logged_in: continue
             delta_cmd = time.time() - session.cmd_last_visible
             delta_conn = time.time() - session.conn_time
-            player = session.get_player()
+            account = session.get_account()
             puppet = session.get_puppet()
             location = puppet.location.key if puppet and puppet.location else "None"
             sex = puppet.db.sex if puppet.db.sex else "None"
 
-            who_list.append([player.name, sex, delta_cmd, delta_conn, location])
+            who_list.append([account.name, sex, delta_cmd, delta_conn, location])
 
         self.caller.msg(header("+who"))
         output = evtable.EvTable("Name","Sex","Idle","Online","Location",

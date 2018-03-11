@@ -5,7 +5,7 @@ What-Is XXX is a MUCK-based command allowing specific characters to set a list o
     bit of code, it is being used as practice in coding.
 
 Usage:
-    +wi (or +wixxx):     display an output of all nearby (in the room) players with What-Is
+    +wi (or +wixxx):     display an output of all nearby (in the room) accounts with What-Is
                          information.
 
     +wi [name]:          display information of character object [name], works at range.
@@ -35,7 +35,7 @@ class CmdWixxx(MuxCommand):
     bit of code, it is being used as practice in coding. Evennia port by Indigo@Startide
 
     Usage:
-        +wi (or +wixxx):     display an output of all nearby (in the room) players with What-Is
+        +wi (or +wixxx):     display an output of all nearby (in the room) accounts with What-Is
                              information.
 
         +wi [name]:          display information of character object [name], works at range.
@@ -300,7 +300,7 @@ class CmdWixxx(MuxCommand):
                     wi_result = ""
                     basics = ""
 
-                    if i.has_player:
+                    if i.has_account:
 
                         if i.db.widat:
                             for k in i.db.widat.split():

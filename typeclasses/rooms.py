@@ -34,9 +34,9 @@ REGEXMAP = {"morning": (RE_MORNING, RE_AFTERNOON, RE_EVENING, RE_NIGHT),
 # set up the seasons and time slots. This assumes gametime started at the
 # beginning of the year (so month 1 is equivelent to January), and that
 # one CAN divide the game's year into four seasons in the first place...
-MONTHS_PER_YEAR = settings.TIME_MONTH_PER_YEAR
+MONTHS_PER_YEAR = 12
 SEASONAL_BOUNDARIES = (3 / 12.0, 6 / 12.0, 9 / 12.0)
-HOURS_PER_DAY = settings.TIME_HOUR_PER_DAY
+HOURS_PER_DAY = 24
 DAY_BOUNDARIES = (0, 6 / 24.0, 12 / 24.0, 18 / 24.0)
 
 # implements the Extended Room (As DefaultRoom)
@@ -225,9 +225,9 @@ class Room(DefaultRoom):
                     alias_list.sort(key=len)
                     alias = "|b<|g{}|b>|n".format(str.upper(alias_list[0]))
                 exits.append("{} {}".format(alias, key))
-            elif con.has_player:
-                # Colorize the Players based on idle.
-                if not con.has_player:
+            elif con.has_account:
+                # Colorize the Accounts based on idle.
+                if not con.has_account:
                     continue
                 elif con.idle_time > 600:
                     users.append("{B%s-I{n" % key)
@@ -242,7 +242,7 @@ class Room(DefaultRoom):
             string += "\n\n{}".format(self.db.desc)
 
         string += "\n\n"
-        table = evtable.EvTable("|cPlayers:|n", "|cThings:|n", "|cExits:", width=78, border="none")
+        table = evtable.EvTable("|cAccounts:|n", "|cThings:|n", "|cExits:", width=78, border="none")
         table.reformat_column(0, width=18, align="l")
         table.reformat_column(1, width=22, align="l")
         table.reformat_column(2, width=38, align="l")
@@ -275,7 +275,7 @@ class CmdExtendedLook(default_cmds.CmdLook):
       look
       look <obj>
       look <room detail>
-      look *<player>
+      look *<account>
 
     Observes your location, details at your location or objects in your vicinity.
     """
@@ -313,7 +313,7 @@ class CmdExtendedLook(default_cmds.CmdLook):
                 return
 
         if not hasattr(looking_at_obj, 'return_appearance'):
-            # this is likely due to us having a player instead
+            # this is likely due to us having an account instead
             looking_at_obj = looking_at_obj.character
         if not looking_at_obj.access(caller, "view"):
             caller.msg("Could not find '%s'." % args)

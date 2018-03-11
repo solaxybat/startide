@@ -2,7 +2,7 @@ from evennia import Command
 
 class CmdSpoof(Command):
     """
-    Spoof allows a player (or staff) the ability to present a block of text without
+    Spoof allows an account (or staff) the ability to present a block of text without
     starting it with their own name. To prevent abuse, it will append their name in
     brackets at the end of the pose.
 

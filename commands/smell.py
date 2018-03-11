@@ -37,7 +37,7 @@ class CmdSmell(Command):
                 caller.msg("Your own scent: {}".format(caller.db.scent))
                 return
             else:
-                caller.msg("You don't smell like anything! Try 'editplayer' to change this.")
+                caller.msg("You don't smell like anything! Try 'editaccount' to change this.")
                 return
 
         # Now we have to figure out what we're looking for.
