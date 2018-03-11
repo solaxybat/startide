@@ -79,7 +79,7 @@ class Room(DefaultRoom):
         """
         # get the current time as parts of year and parts of day
         # returns a tuple (years,months,weeks,days,hour,minutes,sec)
-        time = gametime.gametime()
+        time = utils.time_format(gametime.gametime(absolute=True), style=3)
         month, hour = time[1], time[4]
         season = float(month) / MONTHS_PER_YEAR
         timeslot = float(hour) / HOURS_PER_DAY
