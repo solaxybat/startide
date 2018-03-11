@@ -264,6 +264,7 @@ class CmdWixxx(MuxCommand):
                 # Alright, time to set up a table...
                 result = evtable.EvTable("Name","Result", width=74, align="l", valign="t", border="none")
                 result.reformat_column(0, width=16)
+                result.reformat_column(1, width=55)
                 for i in args.split():
                     target = caller.search(i, typeclass="typeclasses.characters.Character", global_search=True)
                     if target:
@@ -296,6 +297,7 @@ class CmdWixxx(MuxCommand):
                 # No args. Just give the room.
                 result = evtable.EvTable("Name","result", width=74, align="l", valign="t", border="none")
                 result.reformat_column(0, width=16)
+                result.reformat_column(1, width=55)
                 for i in caller.location.contents:
                     wi_result = ""
                     basics = ""
