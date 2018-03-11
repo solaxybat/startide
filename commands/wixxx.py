@@ -276,7 +276,7 @@ class CmdWixxx(MuxCommand):
                         if target.db.widatcust:
                             wi_result += caller.db.widatcust
                         if not target.db.widat and not target.db.widatcust:
-                            wi_result = "No WI info set"
+                            wi_result = "No WI info set "
                         if target.db.sex:
                             wi_result += csex(target.db.sex)
                         if target.db.race:
@@ -306,7 +306,7 @@ class CmdWixxx(MuxCommand):
                             for k in i.db.widat.split():
                                 wi_result += self.wiData[k] + " "
                         else:
-                            wi_result = "No WI info set"
+                            wi_result = "No WI info set "
                         if i.db.sex:
                             wi_result += csex(i.db.sex)
                         if i.db.race:
