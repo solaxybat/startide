@@ -21,12 +21,12 @@ class CmdEditAccount(Command):
     by Indigo@Startide
 
     Usage:
-        'editaccount'
-        '+editaccount'
+        'editplayer'
+        '+editplayer'
     """
 
-    key = "editaccount"
-    aliases = ["+editaccount"]
+    key = "editplayer"
+    aliases = ["+editplayer"]
     help_category = "General"
 
     def func(self):
@@ -55,26 +55,26 @@ class CmdEditAccount(Command):
 def menu_start_node(caller):
 
     options = ()
-    text = "{CName:{n " + caller.name + "\n"
+    text = "|CName:|n " + caller.name + "\n"
     if caller.db.flight:
-        text += "{CCan Fly:{n {GYes{n\n"
+        text += "|CCan Fly:|n |GYes|n\n"
     else:
-        text += "{CCan Fly:{n No\n"
+        text += "|CCan Fly:|n No\n"
     text += "\n" + "Enter the Number of the Item to Change.\n"
 
-    line = "{CFull Name:{n " + caller.db.fullname
+    line = "|CFull Name:|n " + caller.db.fullname
     options = options + ({"desc": line,
                           "goto": "askFullname"},)
-    line = "{CSex:{n " + csex(caller.db.sex)
+    line = "|CSex:|n " + csex(caller.db.sex)
     options = options + ({"desc": line,
                           "goto": "askSex"},)
-    line = "{CRace:{n " + caller.db.race
+    line = "|CRace:|n " + caller.db.race
     options = options + ({"desc": line,
                           "goto": "askRace"},)
-    line = "{CSet Description{n"
+    line = "|CSet Description|n"
     options = options + ({"desc": line,
                           "goto": "askDesc"},)
-    line = "{CScent:{n " + caller.db.scent
+    line = "|CScent:|n " + caller.db.scent
     options = options + ({"desc": line,
                           "goto": "askScent"},)
     options = options + ({"key": ("_default", "Q", "q", "Quit", "quit"),
@@ -143,7 +143,7 @@ def setScent(caller, raw_string):
         caller.msg("Cancelled")
     else:
         caller.db.scent = scent
-        caller.msg("{CScent Message Set to:{r %s" % scent)
+        caller.msg("|CScent Message Set to:|r %s" % scent)
 
 def askFullname(caller):
 
@@ -161,7 +161,7 @@ def setFullname(caller, raw_string):
         caller.msg("Cancelled")
     else:
         caller.db.fullname = fullname
-        caller.msg("{CFull Name Set to:{r %s" % fullname)
+        caller.msg("|CFull Name Set to:|r %s" % fullname)
 
 def askDesc(caller):
 
@@ -181,7 +181,7 @@ def setDesc(caller, raw_string):
         caller.msg("Cancelled")
     else:
         caller.db.desc = desc
-        caller.msg("{CDesc Set to:{n %s" % desc)
+        caller.msg("|CDesc Set to:|n %s" % desc)
 
 def node_formatter(nodetext, optionstext, caller=None):
     separator1 = header("Edit Account")
